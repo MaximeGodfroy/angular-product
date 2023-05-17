@@ -1,5 +1,6 @@
 import { formatDate } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild, OnInit } from '@angular/core';
+import { DEFAULT_SEARCH_PARAMS, SearchParams, Sort } from 'app/shared/ui/list/search.model';
 import { isArray } from '@dwtechs/checkhard';
 import { CrudItemOptions } from 'app/shared/utils/crud-item-options/crud-item-options.model';
 import { TableLazyLoadEvent } from 'app/shared/ui/table/table-lazyload-event.model';
@@ -10,6 +11,13 @@ import { ControlType } from 'app/shared/utils/crud-item-options/control-type.mod
 import { ProductsService } from '../products/products.service';
 import { Product } from '../products/products.model';
 import { Observable } from 'rxjs';
+
+export interface PaginationEvent {
+  first: number;
+  rows: number;
+  sortField: string;
+  sortOrder: string;
+}
 
 @Component({
   selector: 'app-table',
@@ -32,18 +40,22 @@ export class ProductsAdminComponent implements OnInit, OnChanges {
   @Input() public readonly lazy: boolean = false;
   @Input() public readonly totalRecords: number;
   @Input() public readonly multiSelect: boolean;
+  @Output() pageChanged: EventEmitter<PaginationEvent> = new EventEmitter();
   @Output() saved: EventEmitter<Product> = new EventEmitter();
   @Output() deleted: EventEmitter<number[]> = new EventEmitter();
   @Output() lazyLoaded: EventEmitter<TableLazyLoadEvent> = new EventEmitter();
 
   public cols: TableColumn[];
   public selectedEntries = [];
+  public searchParams: SearchParams = DEFAULT_SEARCH_PARAMS;
   public columnsConfigDialogDisplayed = false;
   public exportDialogDisplay = false;
   public entryEditionDialogDisplayed = false;
   public editedEntry: Product;
   public creation: boolean;
   public ControlType = ControlType;
+
+  private firstLoad = true;
 
   constructor(private productsService: ProductsService) {}
 
@@ -203,6 +215,18 @@ export class ProductsAdminComponent implements OnInit, OnChanges {
 
   private getOption(column: CrudItemOptions, cellValue: unknown): SelectItem {
     return column.options.find(opt => opt.value === cellValue)
+  }
+
+  public onPageChange(event: PaginationEvent) {
+    if (!this.firstLoad) {
+      this.storeSearchParams({ first: event.first, rows: event.rows });
+      this.pageChanged.emit(event);
+    }
+    this.firstLoad = false;
+  }
+
+  private storeSearchParams(changes: Partial<SearchParams>): void {
+    this.searchParams = { ...this.searchParams, ...changes };
   }
 
 }
