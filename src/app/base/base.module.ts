@@ -8,10 +8,10 @@ import { SidenavComponent } from './sidenav/sidenav.component';
 import { ThemeToggleButtonComponent } from 'app/base/theme-toggle-button/theme-toggle-button.component';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { ProductsComponent } from './products/products.component';
-import { ProductsAdminComponent } from './products-admin/products-admin.component';
 import { TableModule } from 'primeng/table';
 import { DataViewModule } from 'primeng/dataview';
 import { PaginatorModule } from 'primeng/paginator';
+import { ProductsAdminComponent } from './products-admin/products-admin.component';
 
 @NgModule({
   declarations: [

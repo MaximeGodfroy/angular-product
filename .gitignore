@@ -1,3 +1,5 @@
 node_modules
 .vscode
 .angular
+src/app/base/products-old
+src/app/base/products-admin/products-admin.component-copy.html

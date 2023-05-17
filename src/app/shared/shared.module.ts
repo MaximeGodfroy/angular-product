@@ -55,7 +55,13 @@ import { TableActionsCellComponent } from './ui/table/table-actions-cell/table-a
     FileUploadInputComponent,
     PrimeNGModule,
     DynamicFormComponent,
-    TableComponent
+    TableComponent,
+    EditionDialogComponent,
+    ColumnsManagementDialogComponent,
+    DynamicFormControlComponent,
+    TableToolbarComponent,
+    TableFilterCellComponent,
+    TableActionsCellComponent
   ]
 })
 export class SharedModule { }
