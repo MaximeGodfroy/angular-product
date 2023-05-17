@@ -1,0 +1,35 @@
+<p-table [value]="data$ | async" dataKey="code" [tableStyle]="{'min-width': '50rem'}">
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="width: 4rem">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th>Code <p-sortIcon></p-sortIcon></th>
+            <th>Name <p-sortIcon></p-sortIcon></th>
+            <th>Actions</th>
+        </tr>
+        <tr>
+            <th></th>
+            <th><input type="text"/></th>
+            <th><input type="text"/></th>
+            <th></th>
+          </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-data>
+        <tr>
+            <td>
+                <p-tableCheckbox [value]="data"></p-tableCheckbox>
+            </td>
+            <td>{{data.code}}</td>
+            <td>{{data.name}}</td>
+            <td>
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-sm p-button-rounded p-button-text"
+                    pTooltip="Edit">
+                </button>
+                <button pButton pRipple icon="pi pi-trash"
+                    class="p-button-sm p-button-rounded p-button-text p-button-danger" pTooltip="Delete" [id]="'trash' + data.id">
+                </button>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

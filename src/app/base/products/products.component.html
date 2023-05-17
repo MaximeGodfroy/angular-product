@@ -1,0 +1,107 @@
+<p-dataView #dv [value]="items$ | async"
+  [paginator]="true"
+  [rows]="searchParams.rows"
+  [totalRecords]="totalRecords || (items$ | async)?.length"
+  [filterBy]="sortKey"
+  [sortField]="sortField"
+  [sortOrder]="sortOrder"
+  [layout]="layout"
+  [lazy]="backEndSearch"
+  (onLazyLoad)="onPageChange($event)"
+  [showJumpToPageDropdown]="false"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [rowsPerPageOptions]="[10,25,50]">
+  <!-- Header -->
+  <ng-template pTemplate="header">
+    <div class="form-control-container">
+      <p-dropdown [options]="sortOptions"
+        class="h-45"
+        placeholder="Sort By"
+        [formControl]="sortCtrl"
+        styleClass="p-mb-2 p-mb-md-0">
+      </p-dropdown>
+      <span class="p-input-icon-left h-45 grow m-5">
+        <i class="pi pi-search"></i>
+        <input #searchInput
+          type="search"
+          pInputText
+          placeholder="Search"
+          [formControl]="searchCtrl">
+      </span>
+      <div *ngIf="enableDateRange" class="h-45 m-5">
+        <p-calendar [formControl]="dateRangeCtrl" selectionMode="range" [readonlyInput]="true" inputId="range" [showButtonBar]="true"></p-calendar>
+      </div>
+      <p-dataViewLayoutOptions class="h-45 m-5"></p-dataViewLayoutOptions>
+      <button *ngIf="selectable"
+        pButton
+        pRipple
+        icon="pi pi-trash"
+        class="h-45 p-button-danger"
+        (click)="onDeleteSelection()"
+        [disabled]="!selection.length"
+        style="margin: 0 5px;">
+      </button>
+      <button *ngIf="enableAdd" pButton pRipple icon="pi pi-plus" class="h-45" (click)="add()"></button>
+    </div>
+  </ng-template>
+  <!-- List item template -->
+  <ng-template let-item let-i="rowIndex" pTemplate="listItem">
+    <div class="list-item-container">
+      <div class="list-item">
+        <ng-container *ngIf="selectable">
+          <div class="checkbox">
+            <p-checkbox [binary]="true" (onChange)="selectItem($event, item)"></p-checkbox>
+          </div>
+        </ng-container>
+        <ng-container [ngTemplateOutlet]="listItemTemplate" [ngTemplateOutletContext]="{$implicit: item, index: i, display: 'list'}">
+            <div class="card">
+                <img class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + item.image" [alt]="item.name" />
+                <div class="descriptionList">
+                    <div class="flex flex-column align-items-center sm:align-items-start gap-3">
+                        <p class="text-2xl font-bold text-900">{{ item.name }}</p>
+                        <p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>
+                        <p class="flex align-items-center gap-3">
+                            <span class="flex align-items-center gap-2">
+                                <i class="pi pi-tag"></i>
+                                <span class="font-semibold">{{ item.category }}</span>
+                            </span>
+                            
+                        </p>
+                    </div>
+                    <div class="priceCart">
+                        <span class="text-2xl font-semibold">{{'$'+ item.price }}</span>
+                        <button pButton icon="pi pi-shopping-cart" class="md:align-self-end mb-2 p-button-rounded" [disabled]="item.inventoryStatus === 'OUTOFSTOCK'"></button>
+                    </div>
+                </div>
+            </div> 
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+  <!-- Grid item template -->
+  <ng-template let-item let-i="rowIndex" pTemplate="gridItem">
+    <div class="grid-item-container">
+      <div class="grid-item">
+        <ng-container [ngTemplateOutlet]="gridItemTemplate" [ngTemplateOutletContext]="{$implicit: item, index: i, display: 'grid'}">
+            <div class="flex align-items-center gap-3">
+                <span class="flex align-items-center gap-2">
+                    <i class="pi pi-tag"></i>
+                    <span class="font-semibold">{{ item.category }}</span>
+                </span>
+              <p class="inventory">{{item.inventoryStatus}}</p>  
+            </div>
+            <div class="descriptionRating">
+               <p>{{item.name}}</p>  
+               <p>{{item.description}}</p>
+               <p-rating [(ngModel)]="item.rating" [readonly]="true" [cancel]="false"></p-rating>
+            </div>
+            <div class="priceCart">
+                <span class="text-2xl font-semibold">{{'$'+ item.price }}</span>
+                <button pButton icon="pi pi-shopping-cart" class="md:align-self-end mb-2" [disabled]="item.inventoryStatus === 'OUTOFSTOCK'"></button>
+            </div> 
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+</p-dataView>
