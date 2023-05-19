@@ -7,7 +7,7 @@ app.use(express.json());
 const productsRoutes = require('./routes/products');
 
 // connect to mongoDB
-mongoose.connect(`mongodb+srv://maximegodfroy:jWAKTOKVsBamO9G8@cluster0.fgpeope.mongodb.net/?retryWrites=true&w=majority`,
+mongoose.connect(`mongodb+srv://maximegodfroy:<PASSWORD>@cluster0.fgpeope.mongodb.net/?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
