@@ -49,7 +49,12 @@ exports.deleteProduct = (req, res, next) => {
 // middleware of get request to obtain details of one product
 exports.getOneProduct = (req, res, next) => {
     Product.findOne({ id: req.params.id })
-        .then((product) => res.status(200).json(product))
+        .then((product) => { 
+          if(product === null) {
+            res.status(403).json({ message: 'The product does not exist' });
+          } else {
+            res.status(200).json(product);
+          }})
         .catch((error) => res.status(404).json({ error }));
 };
 
